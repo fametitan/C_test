@@ -44,6 +44,7 @@ void test_Isearch_Int() {
 void test_Isearch_Char() {
 	char *notes[] = { "Ab","F#","B","Gb","D" };
 	char *fevourte = "Eb";
+	cout << &fevourte << endl;
 	char **found = (char **)Isearch(&fevourte, notes, 5, sizeof(char*), Str_Cmp);
 	if (found == NULL) {
 		cout << "Not in array" << endl;
@@ -56,7 +57,6 @@ void test_Isearch_Char() {
 void swap(void *ap, void *bp, int size) {
 	char *buff;
 	buff = (char *)malloc(size);
-
 	memcpy(buff, ap, size);
 	memcpy(ap, bp, size);
 	memcpy(bp, buff, size);
@@ -73,11 +73,13 @@ void *Isearch(void *key, void *base, int n, int elemSize, int(*cmpfn) (void *, v
 int Int_Cmp(void *emel1, void *emel2) {
 	int *ap1 = static_cast<int *>(emel1);
 	int *ap2 = static_cast<int *>(emel2);
+	cout << *ap1 << endl;
 	return (*ap1 == *ap2);
 }
 int
 Str_Cmp(void *emel1, void *emel2) {
-	char *ap1 = *static_cast<char **>(emel2);
-	char *ap2 = *static_cast<char **>(emel2);
-	return strcmp(ap1, ap2);
+	const char *ap1 = *static_cast<char **>(emel1);
+	const char *ap2 = *static_cast<char **>(emel2);
+	int a= strcmp(ap1, ap2);
+	return a;
 }

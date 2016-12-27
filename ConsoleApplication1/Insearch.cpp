@@ -1,26 +1,6 @@
 #include "stdafx.h"
-#include <iostream>
-#include <memory>
+#include "Insearch.h"
 using namespace std;
-void
-test_swap();
-void
-test_Isearch_Int();
-void
-test_Isearch_Char();
-void
-*Isearch(void *key, void *base, int n, int elemSize, int(*cmpfn) (void *, void*));
-void
-swap(void *ap, void *bp, int size);
-int
-Int_Cmp(void *emel1, void *emel2);
-int
-Str_Cmp(void *emel1, void *emel2);
-int main() {
-	//test_swap();
-	//test_Isearch_Int();
-	test_Isearch_Char();
-}
 void test_swap() {
 	char *a = "aaaaaa";
 	char *b = "bbbbbb";
@@ -78,10 +58,7 @@ int Int_Cmp(void *emel1, void *emel2) {
 }
 int
 Str_Cmp(void *emel1, void *emel2) {
-	char *a2 = (char *)emel1;
-	char *a3 = *(char **)emel1;
 	const char *ap1 = *static_cast<char **>(emel1);
 	const char *ap2 = *static_cast<char **>(emel2);
-	int a= strcmp(ap1, ap2);
-	return a;
+	return strcmp(ap1, ap2);;
 }

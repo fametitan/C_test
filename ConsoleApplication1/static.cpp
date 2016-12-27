@@ -4,7 +4,7 @@
 #include<assert.h>
 
 void 
-StackNew(stack *s, int ElemSize) {
+StackNew(stack *s, int ElemSize, void(*freefn)(void *)) {
 
 	assert(ElemSize > 0);
 
@@ -15,6 +15,8 @@ StackNew(stack *s, int ElemSize) {
 	s->LogicalSize = 0;
 
 	s->elems = malloc(s->AllowSize*s->ElemSize);
+
+	s->freefn = freefn;
 
 	assert(s->elems != NULL);
 
@@ -67,11 +69,15 @@ StackNew_int(stack_int *s) {
 }
 
 void
-StackDispose(stack_int *s) {
+StackDispose(stack *s) {
+	if (s->freefn != NULL) {
+		for (int i = 0; i < s->LogicalSize; i++) {
+			s->freefn((char *)s->elems + i*s->ElemSize);
+		}
+	}
 
-	free(s->Elems);
-
-	assert(s->Elems == NULL);
+	free(s->elems);
+	assert(s->elems == NULL);
 
 }
 
@@ -104,3 +110,36 @@ StackPop_int(stack_int *s) {
 	return s->Elems[s->LogicalLen];
 
 }
+
+void Test_Stack() {
+	const char *friends[] = { "Aa","Bb","Cc" };
+	stack StrStack;
+	StackNew(&StrStack, sizeof(char *),StringFree);
+	for (int i = 0; i < 3; i++) {
+		char *copy = strdup(friends[i]);
+		StackPush(&StrStack, &copy);
+	}
+	char *name;
+	for (int i = 0; i < 3; i++) {
+		StackPop(&StrStack, &name);
+		free(name);
+	}
+	StackDispose(&StrStack);
+
+}
+
+void StringFree(void *elem) {
+	free(*(char **)elem);
+}
+
+void
+rotate(void *front, void *middle, void *back) {
+	int FrontSize = (char *)middle - (char *)front;
+	int BackSize = (char *)back - (char *)middle;
+	char *buffer;
+	buffer = (char *)malloc(FrontSize);
+	memcpy(buffer, front, FrontSize);
+	memmove(front, middle, BackSize);
+	memcpy((char *)back - FrontSize, buffer, FrontSize);
+}
+

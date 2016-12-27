@@ -9,6 +9,7 @@ typedef struct {
 	int ElemSize;
 	int LogicalSize;
 	int AllowSize;
+	void(*freefn)(void *);
 
 }stack;
 void
@@ -23,3 +24,11 @@ void
 StackPush_int(stack_int *s, int value);
 int
 StackPop_int(stack_int *s);
+void
+Test_Stack();
+void
+StringFree(void *elem);
+
+
+void 
+rotate(void *front, void *middle, void *back);   //移动堆的存放位置，让以front开头移动到以back结尾
